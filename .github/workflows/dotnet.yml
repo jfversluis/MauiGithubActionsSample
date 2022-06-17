@@ -17,9 +17,13 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
+    - name: Decrypt Keystore File
+      run: |
+        echo "${{ secrets.KEYSTORE_FILE }}" > myapp.keystore.asc
+        gpg -d --passphrase "${{ secrets.KEYSTORE_GPG_PASSWORD }}" --batch myapp.keystore.asc > myapp.keystore
     - name: Install .NET MAUI Workload
       run: dotnet workload install maui
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build MauiGithubActionsSample/MauiGithubActionsSample.cpsroj -c Release -f net6.0-android /p:AndroidSigningKeyStore=myapp.keystore /p:AndroidSigningKeyAlias=key /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD_ALIAS }}" --no-restore
