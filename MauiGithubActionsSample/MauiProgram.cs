@@ -1,4 +1,5 @@
 ﻿// Comment Added
+// To Testy "on push"
 namespace MauiGithubActionsSample;
 
 public static class MauiProgram
